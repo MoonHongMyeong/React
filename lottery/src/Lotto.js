@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import data from './data';
 
 const Lotto = () => {
   //1~45까지의 배열
   const [Lottery, setLottery] = useState([]);
   //특정 번호 지운 배열
   const [expectNumber, setExpectNumber] = useState([]);
+  //중복 조회용 오브젝트
+  const [duplicateRound, setDuplicatedRound] = useState("");
   //로또 번호 초기화
   const resetLottery = () => {
+    //Lottery state에 45칸 짜리 배열을 1부터 45까지 순서대로 집어넣기
     setLottery(Array(45).fill().map((index, value) => value + 1));
+    setDuplicatedRound("");
     setExpectNumber([]);
   }
   //번호 지우기
@@ -17,9 +22,38 @@ const Lotto = () => {
   }
   //추첨
   const getLottery = () => {
+    setDuplicatedRound("")
     //객체 깊은복사(JSON)
     let newArray = JSON.parse(JSON.stringify(Lottery));
-    setExpectNumber(shuffleArray(newArray).splice(0, 7));
+    // setExpectNumber(shuffleArray(newArray).splice(0, 6));
+    checkLottery(shuffleArray(newArray).splice(0, 6));
+  }
+
+  const checkLottery = (shuffledArray) => {
+    //배열 순서대로 정렬
+    shuffledArray.sort((a, b) => a - b);
+
+    //object로 이루어진 배열에서 같은 값을 가진 object 검색
+    //1번쨰~6번쨰 같은번호 대조
+    let duplicateData = data.filter((object) => {
+      if (object[1] === shuffledArray[0] &&
+        object[2] === shuffledArray[1] &&
+        object[3] === shuffledArray[2] &&
+        object[4] === shuffledArray[3] &&
+        object[5] === shuffledArray[4] &&
+        object[6] === shuffledArray[5]) {
+        return object
+      }
+      return []
+    })
+    // duplicateData가 존재하는지 존재하면 duplicatedRound state에 오브젝트의 rounds 값을 넣기
+    if (duplicateData.length !== 0) {
+      console.log(duplicateData)
+      setDuplicatedRound(duplicateData[0].rounds);
+    }
+    //expectNumber state에 순서대로 정렬한 배열을 넣기
+    setExpectNumber(shuffledArray)
+    //보너스 번호는 어떻게 처리하지? => 보류
   }
   //배열 셔플
   const shuffleArray = newArray => {
@@ -48,18 +82,21 @@ const Lotto = () => {
       </ButtonContainer>
       <div>
         <p style={{ "textAlign": "center", "fontSize": "3rem", "fontWeight": "800", "marginTop": "-1rem" }}>당첨 예측</p>
+        {/* duplicatedRound값이 존재한다면 xxx회 1등 당첨 번호 입니다. 를 출력 */}
+        {
+          duplicateRound && <h1 style={{ "textAlign": "center" }}>{duplicateRound}회 1등 당첨 번호 입니다.</h1>
+        }
         <div style={lotteryBox}>
           {/*
-        index 0~6까지 번호 출력 
+        index 0~5까지 번호 출력 
         sort((a,b)=> a-b)) 올림차순으로 정렬
         */}
-          {
+          {expectNumber &&
             expectNumber.sort((a, b) => a - b).map((number, index) => {
               return <Ball number key={index}>{number} </Ball>
             })
           }
         </div>
-
       </div>
     </div >
   )
@@ -97,7 +134,6 @@ const Ball = styled.span`
   height : 2rem;
   cursor: pointer;
   background-color: ${props => {
-    console.log(props.children[0])
     if (props.children[0] < 10) {
       return '#ff3838'
     } else if (props.children[0] < 20) {
