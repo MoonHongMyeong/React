@@ -44,11 +44,9 @@ const Lotto = () => {
         object[6] === shuffledArray[5]) {
         return object
       }
-      return []
     })
     // duplicateData가 존재하는지 존재하면 duplicatedRound state에 오브젝트의 rounds 값을 넣기
     if (duplicateData.length !== 0) {
-      console.log(duplicateData)
       setDuplicatedRound(duplicateData[0].rounds);
     }
     //expectNumber state에 순서대로 정렬한 배열을 넣기
@@ -82,7 +80,6 @@ const Lotto = () => {
       </ButtonContainer>
       <div>
         <p style={{ "textAlign": "center", "fontSize": "3rem", "fontWeight": "800", "marginTop": "-1rem" }}>당첨 예측</p>
-        {/* duplicatedRound값이 존재한다면 xxx회 1등 당첨 번호 입니다. 를 출력 */}
         {
           duplicateRound && <h1 style={{ "textAlign": "center" }}>{duplicateRound}회 1등 당첨 번호 입니다.</h1>
         }
