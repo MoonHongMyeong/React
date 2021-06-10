@@ -81,7 +81,7 @@ const Lotto = () => {
       <div>
         <p style={{ "textAlign": "center", "fontSize": "3rem", "fontWeight": "800", "marginTop": "-1rem" }}>당첨 예측</p>
         {
-          duplicateRound && <h1 style={{ "textAlign": "center" }}>{duplicateRound}회 1등 당첨 번호 입니다.</h1>
+          duplicateRound && <h1 style={{ "textAlign": "center" }}>{duplicateRound}회 <br />1등 당첨 번호 입니다.</h1>
         }
         <div style={lotteryBox}>
           {/*
@@ -122,7 +122,7 @@ const lotteryBox = {
 const Ball = styled.span`
   display : flex;
   border-radius: 2rem;
-  margin : 0 3px;
+  margin : 5px 3px;
   justify-content: center;
   align-items: center;
   font-weight: 700;
